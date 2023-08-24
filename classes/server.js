@@ -22,6 +22,9 @@ export default class Server {
         // CORS
         this.app.use( cors() );
 
+        // Lectura y parseo del body para leer dato JSON
+        this.app.use( express.json() );
+
         // Sirviendo directorio publico | la ruta principal ya no esta sirviendo
         this.app.use( express.static('public') );
     }
