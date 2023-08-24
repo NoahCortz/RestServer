@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 
 export default class Server {
@@ -20,6 +21,10 @@ export default class Server {
     // Los middlewares nos permiten crear reglas o funciones que nos proveen
     // de funcionalidad o configuraciones extras para la aplicacion
     middlewares() {
+        // CORS
+        // Permite servir informacion a aplicaciones frontend
+        this.app.use( cors() );
+
         // Sirviendo directorio publico | la ruta principal ya no esta sirviendo
         this.app.use( express.static('public') );
     }
@@ -46,7 +51,7 @@ export default class Server {
         });
 
         this.app.post('/api', (req, res) => {
-            res.json({
+            res.status(201).json({
                 message: 'Post API'
             });
         });
