@@ -28,7 +28,33 @@ export default class Server {
     // Este metodo contiene todas las rutas que estaremos configurando
     routes() {
         this.app.get('/api', (req, res) => {
-            res.send('Hello, world!');
+            res.json({
+                message: 'Get API'
+            });
+        });
+
+        this.app.put('/api', (req, res) => {
+            res.json({
+                message: 'Put API'
+            });
+        });
+
+        this.app.patch('/api', (req, res) => {
+            res.json({
+                message: 'Patch API'
+            });
+        });
+
+        this.app.post('/api', (req, res) => {
+            res.json({
+                message: 'Post API'
+            });
+        });
+
+        this.app.delete('/api', (req, res) => {
+            res.json({
+                message: 'Delete API'
+            });
         });
     }
 
