@@ -1,13 +1,9 @@
-import express from 'express';
 import 'dotenv/config';
+import Server from './classes/server.js';
 
-const app = express();
-const port = process.env.PORT;
 
-app.get('/', (req, res) => {
-    res.send('Hello, world!');
-});
+// Creamos la instancia de nuestro servidor
+const server = new Server();
 
-app.listen(port, () => {
-    console.log(`Servidor corriendo en el puerto: ${port}`)
-});
+// Llamamos el metodo que nos levantara la aplicacion
+server.start();
