@@ -1,28 +1,25 @@
 import express from 'express';
 import cors from 'cors';
 
+// Importando mis rutas
+import router from '../routes/user.routes.js';
 
 export default class Server {
     constructor() {
-        // Creamos instancia de express asignandola a la variable de la clase
+        // App y port
         this.app = express();
-
-        // Creamos nuestra variable para establecer el puerto de escucha
         this.port = process.env.PORT;
 
         // MIDDLEWARES
         this.middlewares();
 
-        // Invocamos el metodo para llamar las rutas del RestServer
+        // Mis Rutas
         this.routes();
     }
 
     // Configurando middlewares
-    // Los middlewares nos permiten crear reglas o funciones que nos proveen
-    // de funcionalidad o configuraciones extras para la aplicacion
     middlewares() {
         // CORS
-        // Permite servir informacion a aplicaciones frontend
         this.app.use( cors() );
 
         // Sirviendo directorio publico | la ruta principal ya no esta sirviendo
@@ -30,37 +27,8 @@ export default class Server {
     }
 
     // Configurando rutas
-    // Este metodo contiene todas las rutas que estaremos configurando
     routes() {
-        this.app.get('/api', (req, res) => {
-            res.json({
-                message: 'Get API'
-            });
-        });
-
-        this.app.put('/api', (req, res) => {
-            res.json({
-                message: 'Put API'
-            });
-        });
-
-        this.app.patch('/api', (req, res) => {
-            res.json({
-                message: 'Patch API'
-            });
-        });
-
-        this.app.post('/api', (req, res) => {
-            res.status(201).json({
-                message: 'Post API'
-            });
-        });
-
-        this.app.delete('/api', (req, res) => {
-            res.json({
-                message: 'Delete API'
-            });
-        });
+        this.app.use('/api/v1/usuarios', router);
     }
 
     // Inicializando la aplicacion
