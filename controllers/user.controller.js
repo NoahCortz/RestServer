@@ -1,5 +1,4 @@
 import { request, response } from 'express';
-import { validationResult } from 'express-validator';
 import bcryptjs from 'bcryptjs';
 
 // Importando mis modelos
@@ -47,12 +46,6 @@ const userPatch = ( req = request, res = response) => {
 }
 
 const userPost = async (req = request, res = response) => {
-    // Obteniendo validaciones de express-validator
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json(errors);
-    }
-
     // Desestructurando datos obtenidos desde request.body
     const { name, email, password, role } = req.body;
 
