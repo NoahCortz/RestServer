@@ -23,6 +23,7 @@ Para levantar el proyecto se necesitan seguir los siguientes pasos:
 * [NodeJS](https://nodejs.org/es/docs)
 * [CORS](https://www.npmjs.com/package/cors)
 * [dotenv](https://www.npmjs.com/package/dotenv)
+* [Mongoose](https://mongoosejs.com/)
 
 ## Authors ✔️
 

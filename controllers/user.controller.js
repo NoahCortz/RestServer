@@ -1,5 +1,8 @@
 import { request, response } from 'express';
 
+// Importando mis modelos
+import User from '../models/usuario.model.js';
+
 
 const userGet = ( req = request, res = response) => {
     // Obtenemos todos los queryParams que el usuario ingrese
@@ -41,17 +44,20 @@ const userPatch = ( req = request, res = response) => {
     });
 }
 
-const userPost = ( req = request, res = response) => {
-    // Obtenemos los datos que se estan solicitando del cuerpo
-    // Desestructuramos solo aquellos datos que necesitamos
-    const { name, email } = req.body;
+const userPost = async (req = request, res = response) => {
+    const body = req.body;
+
+    // Creando instancia del modelo User
+    // El modelo recibe como paramtro lo que el usuario está enviando en el
+    //  body de la solicitud.
+    const newUser = new User( body );
+
+    // Guardando en la base de datos
+    await newUser.save();
 
     res.status(201).json({
         message: 'Post API | Controller',
-        data: {
-            name,
-            email
-        }
+        newUser
     });
 }
 
