@@ -1,4 +1,5 @@
 import { request, response } from 'express';
+import { validationResult } from 'express-validator';
 import bcryptjs from 'bcryptjs';
 
 // Importando mis modelos
@@ -46,12 +47,25 @@ const userPatch = ( req = request, res = response) => {
 }
 
 const userPost = async (req = request, res = response) => {
+    // Obteniendo validaciones de express-validator
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json(errors);
+    }
+
+    // Desestructurando datos obtenidos desde request.body
     const { name, email, password, role } = req.body;
 
     // Creando instancia del modelo User
     const newUser = new User({ name, email, password, role });
 
     // Verificando si el usuario ya existe
+    const userEmailExists = await User.findOne({ email });
+    if (userEmailExists) {
+        res.status(400).json({
+            message: 'El usuario ya ha sido registrado con el correo ingresado.'
+        });
+    }
 
     // Encriptando la contraseña
     const salt = bcryptjs.genSaltSync();

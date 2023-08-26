@@ -6,6 +6,7 @@ import {
     userPost,
     userPut
 } from '../controllers/user.controller.js';
+import { check } from 'express-validator';
 
 // Creando objeto que permitira agregar las rutas a nuestra aplicacion express
 const router = Router();
@@ -19,7 +20,9 @@ router.put('/:id', userPut);
 
 router.patch('/', userPatch);
 
-router.post('/', userPost);
+router.post('/', [
+    check('email', 'El correo no es válido').isEmail()
+], userPost);
 
 router.delete('/:id', userDelete);
 
