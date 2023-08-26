@@ -1,4 +1,5 @@
 import { request, response } from 'express';
+import bcryptjs from 'bcryptjs';
 
 // Importando mis modelos
 import User from '../models/usuario.model.js';
@@ -45,19 +46,26 @@ const userPatch = ( req = request, res = response) => {
 }
 
 const userPost = async (req = request, res = response) => {
-    const body = req.body;
+    const { name, email, password, role } = req.body;
 
     // Creando instancia del modelo User
-    // El modelo recibe como paramtro lo que el usuario está enviando en el
-    //  body de la solicitud.
-    const newUser = new User( body );
+    const newUser = new User({ name, email, password, role });
+
+    // Verificando si el usuario ya existe
+
+    // Encriptando la contraseña
+    const salt = bcryptjs.genSaltSync();
+    newUser.password = bcryptjs.hashSync(password, salt);
 
     // Guardando en la base de datos
     await newUser.save();
 
     res.status(201).json({
-        message: 'Post API | Controller',
-        newUser
+        message: 'Usuario creado correctamente.',
+        user: {
+            name: newUser.name,
+            email: newUser.email
+        }
     });
 }
 
