@@ -69,10 +69,7 @@ const userPost = async (req = request, res = response) => {
 
     res.status(201).json({
         message: 'Usuario creado correctamente.',
-        user: {
-            name: newUser.name,
-            email: newUser.email
-        }
+        user: newUser
     });
 }
 

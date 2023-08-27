@@ -32,4 +32,12 @@ const UserSchema = Schema({
     }
 });
 
+// Método que sobreescribira el toJSON del modelo
+// Modificamos los datos que nos devuleve el método para mostrar solo los datos
+// necesarios para el usuario.
+UserSchema.methods.toJSON = function () {
+    const { __v, password, _id, ...user } = this.toObject();
+    return user;
+}
+
 export default model('User', UserSchema);
