@@ -9,11 +9,12 @@ const userGet = async (req = request, res = response) => {
     // Obtenemos todos los queryParams que el usuario ingrese
     const { limit = 5, from = 0 } = req.query;
 
-    const users = await User.find({ status: true })
-        .skip(Number(from))
-        .limit(Number(limit));
-
-    const total = await User.countDocuments({ status: true });
+    const [ total, users ] = await Promise.all([
+        User.countDocuments({ status: true }),
+        User.find({ status: true })
+            .skip(Number(from))
+            .limit(Number(limit))
+    ]);
 
     res.json({
         message: 'Lista de usuarios',
