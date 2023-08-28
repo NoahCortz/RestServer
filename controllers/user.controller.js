@@ -52,14 +52,6 @@ const userPost = async (req = request, res = response) => {
     // Creando instancia del modelo User
     const newUser = new User({ name, email, password, role });
 
-    // Verificando si el usuario ya existe
-    const userEmailExists = await User.findOne({ email });
-    if (userEmailExists) {
-        res.status(400).json({
-            message: 'El usuario ya ha sido registrado con el correo ingresado.'
-        });
-    }
-
     // Encriptando la contraseña
     const salt = bcryptjs.genSaltSync();
     newUser.password = bcryptjs.hashSync(password, salt);

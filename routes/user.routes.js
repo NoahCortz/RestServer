@@ -8,7 +8,7 @@ import {
     userPut
 } from '../controllers/user.controller.js';
 import { validateFields } from '../middlewares/validate-fields.js';
-import { isRoleValid } from '../helpers/database-validators.js';
+import { isRoleValid, isUserEmailValid } from '../helpers/database-validators.js';
 
 
 const router = Router();
@@ -23,6 +23,7 @@ router.post('/', [
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'La contraseña es obligatoria y debe tener al menos 6 caracteres').isLength({ min: 6 }),
     check('email', 'El correo no es válido').isEmail(),
+    check('email').custom( isUserEmailValid ),
     check('role').custom( isRoleValid ),
     validateFields
 ], userPost);

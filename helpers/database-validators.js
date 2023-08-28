@@ -1,4 +1,5 @@
 import Role from '../models/role.model.js';
+import User from '../models/usuario.model.js';
 
 const isRoleValid = async (role = '') => {
     const roleExists = await Role.findOne({ role });
@@ -8,4 +9,15 @@ const isRoleValid = async (role = '') => {
     }
 }
 
-export { isRoleValid };
+const isUserEmailValid = async (email = '') => {
+    const userEmailExists = await User.findOne({ email });
+
+    if (userEmailExists) {
+        throw new Error(`El correo ${email} ya está registrado en la base de datos.`);
+    }
+}
+
+export {
+    isRoleValid,
+    isUserEmailValid
+};
