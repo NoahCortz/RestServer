@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 
+import { mongoDBConnection } from '../database/config.db.js';
+
 // Importando mis rutas
 import router from '../routes/user.routes.js';
 
@@ -10,11 +12,18 @@ export default class Server {
         this.app = express();
         this.port = process.env.PORT;
 
+        // Conexion a Base de Datos
+        this.connectDB();
+
         // MIDDLEWARES
         this.middlewares();
 
         // Mis Rutas
         this.routes();
+    }
+
+    async connectDB() {
+        await mongoDBConnection();
     }
 
     // Configurando middlewares
@@ -37,7 +46,7 @@ export default class Server {
     // Inicializando la aplicacion
     start() {
         this.app.listen(this.port, () => {
-            console.log(`Servidor corriendo en el puerto: ${this.port}`)
+            console.log(`Servidor corriendo en el puerto: http://localhost:${this.port}`)
         });
     }
 }

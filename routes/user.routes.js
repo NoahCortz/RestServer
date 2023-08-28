@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { check } from 'express-validator';
 import {
     userDelete,
     userGet,
@@ -6,22 +7,36 @@ import {
     userPost,
     userPut
 } from '../controllers/user.controller.js';
+import { validateFields } from '../middlewares/validate-fields.js';
+import { isRoleValid, isUserEmailValid, isUserIdValid } from '../helpers/database-validators.js';
 
-// Creando objeto que permitira agregar las rutas a nuestra aplicacion express
+
 const router = Router();
 
-// Agregamos todas nuestras rutas
 router.get('/', userGet);
 
-// Modificamos la ruta para agregar un query params y actualizar conforme al
-// dato que se establesca en la propiedad `id`
-router.put('/:id', userPut);
+router.put('/:id', [
+    check('id', 'No es un id válido').isMongoId(),
+    check('id').custom( isUserIdValid ),
+    check('role').custom( isRoleValid ),
+    validateFields
+], userPut);
 
 router.patch('/', userPatch);
 
-router.post('/', userPost);
+router.post('/', [
+    check('name', 'El nombre es obligatorio').not().isEmpty(),
+    check('password', 'La contraseña es obligatoria y debe tener al menos 6 caracteres').isLength({ min: 6 }),
+    check('email', 'El correo no es válido').isEmail(),
+    check('email').custom( isUserEmailValid ),
+    check('role').custom( isRoleValid ),
+    validateFields
+], userPost);
 
-router.delete('/:id', userDelete);
+router.delete('/:id', [
+    check('id', 'No es un id válido').isMongoId(),
+    check('id').custom( isUserIdValid ),
+    validateFields
+], userDelete);
 
-// Exportamos nuestro objeto con las rutas ya asignadas
 export default router;
