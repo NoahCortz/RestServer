@@ -1,5 +1,5 @@
 import Role from '../models/role.model.js';
-import User from '../models/usuario.model.js';
+import User from '../models/user.model.js';
 
 const isRoleValid = async (role = '') => {
     const roleExists = await Role.findOne({ role });
@@ -17,7 +17,16 @@ const isUserEmailValid = async (email = '') => {
     }
 }
 
+const isUserIdValid = async (id) => {
+    const userIdExists = await User.findById(id);
+
+    if (!userIdExists) {
+        throw new Error(`El id: ${id} no existe.`);
+    }
+}
+
 export {
     isRoleValid,
-    isUserEmailValid
+    isUserEmailValid,
+    isUserIdValid
 };

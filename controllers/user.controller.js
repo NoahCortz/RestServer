@@ -2,7 +2,7 @@ import { request, response } from 'express';
 import bcryptjs from 'bcryptjs';
 
 // Importando mis modelos
-import User from '../models/usuario.model.js';
+import User from '../models/user.model.js';
 
 
 const userGet = ( req = request, res = response) => {
@@ -21,13 +21,21 @@ const userGet = ( req = request, res = response) => {
 }
 
 // Realizar actualizaciones completas
-const userPut = ( req = request, res = response) => {
-    // Obtenemos el parametro que se establecio en la ruta de tipo PUT `id`
+const userPut = async (req = request, res = response) => {
     const id = req.params.id;
+    const { password, google, _id, email, ...rest } = req.body;
+
+    if (password) {
+        const salt = bcryptjs.genSaltSync();
+        rest.password = bcryptjs.hashSync(password, salt);
+    }
+
+    // El tercer parámetro de findByIdAndUpdate indica que se devuelva el usuario actualizado
+    const updatedUser = await User.findByIdAndUpdate(id, rest, { new: true });
 
     res.status(200).json({
-        message: 'Put API | Controller',
-        id
+        message: 'Usuario actualizado correctamente.',
+        user: updatedUser
     });
 }
 
@@ -50,18 +58,18 @@ const userPost = async (req = request, res = response) => {
     const { name, email, password, role } = req.body;
 
     // Creando instancia del modelo User
-    const newUser = new User({ name, email, password, role });
+    const createdUser = new User({ name, email, password, role });
 
     // Encriptando la contraseña
     const salt = bcryptjs.genSaltSync();
-    newUser.password = bcryptjs.hashSync(password, salt);
+    createdUser.password = bcryptjs.hashSync(password, salt);
 
     // Guardando en la base de datos
-    await newUser.save();
+    await createdUser.save();
 
     res.status(201).json({
         message: 'Usuario creado correctamente.',
-        user: newUser
+        user: createdUser
     });
 }
 
