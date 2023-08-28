@@ -5,18 +5,22 @@ import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
 
 
-const userGet = ( req = request, res = response) => {
+const userGet = async (req = request, res = response) => {
     // Obtenemos todos los queryParams que el usuario ingrese
-    const { name, apiKey, page = '1', limit = 5 } = req.query;
+    const { limit = 5, from = 0 } = req.query;
+
+    const users = await User.find({ status: true })
+        .skip(Number(from))
+        .limit(Number(limit));
+
+    const total = await User.countDocuments({ status: true });
 
     res.json({
-        message: 'Get API | Controller',
-        query: {
-            name,
-            apiKey,
-            page,
-            limit
-        }
+        message: 'Lista de usuarios',
+        total,
+        from,
+        limit,
+        users
     });
 }
 
