@@ -78,13 +78,14 @@ const userPost = async (req = request, res = response) => {
     });
 }
 
-const userDelete = ( req = request, res = response) => {
-    // Obteniendo el id desde parametros de la url
-    const id = req.params.id;
+const userDelete = async (req = request, res = response) => {
+    const { id } = req.params;
+
+    const deletedUser = await User.findByIdAndUpdate(id, { status: false });
 
     res.status(200).json({
-        message: 'Delete API | Controller',
-        id
+        message: 'Usuario eliminado correctamente.',
+        deletedUser
     });
 }
 
