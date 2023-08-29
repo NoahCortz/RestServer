@@ -6,7 +6,6 @@ import User from '../models/user.model.js';
 
 
 const userGet = async (req = request, res = response) => {
-    // Obtenemos todos los queryParams que el usuario ingrese
     const { limit = 5, from = 0 } = req.query;
 
     const [ total, users ] = await Promise.all([
@@ -25,7 +24,6 @@ const userGet = async (req = request, res = response) => {
     });
 }
 
-// Realizar actualizaciones completas
 const userPut = async (req = request, res = response) => {
     const id = req.params.id;
     const { password, google, _id, email, ...rest } = req.body;
@@ -35,7 +33,6 @@ const userPut = async (req = request, res = response) => {
         rest.password = bcryptjs.hashSync(password, salt);
     }
 
-    // El tercer parámetro de findByIdAndUpdate indica que se devuelva el usuario actualizado
     const updatedUser = await User.findByIdAndUpdate(id, rest, { new: true });
 
     res.status(200).json({
@@ -44,7 +41,6 @@ const userPut = async (req = request, res = response) => {
     });
 }
 
-// Realizar actualizaciones parciales
 const userPatch = ( req = request, res = response) => {
     const { id, name, email } = req.body;
 
@@ -59,17 +55,13 @@ const userPatch = ( req = request, res = response) => {
 }
 
 const userPost = async (req = request, res = response) => {
-    // Desestructurando datos obtenidos desde request.body
     const { name, email, password, role } = req.body;
 
-    // Creando instancia del modelo User
     const createdUser = new User({ name, email, password, role });
 
-    // Encriptando la contraseña
     const salt = bcryptjs.genSaltSync();
     createdUser.password = bcryptjs.hashSync(password, salt);
 
-    // Guardando en la base de datos
     await createdUser.save();
 
     res.status(201).json({

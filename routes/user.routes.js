@@ -11,20 +11,20 @@ import { validateFields } from '../middlewares/validate-fields.js';
 import { isRoleValid, isUserEmailValid, isUserIdValid } from '../helpers/database-validators.js';
 
 
-const router = Router();
+const userRouter = Router();
 
-router.get('/', userGet);
+userRouter.get('/', userGet);
 
-router.put('/:id', [
+userRouter.put('/:id', [
     check('id', 'No es un id válido').isMongoId(),
     check('id').custom( isUserIdValid ),
     check('role').custom( isRoleValid ),
     validateFields
 ], userPut);
 
-router.patch('/', userPatch);
+userRouter.patch('/', userPatch);
 
-router.post('/', [
+userRouter.post('/', [
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'La contraseña es obligatoria y debe tener al menos 6 caracteres').isLength({ min: 6 }),
     check('email', 'El correo no es válido').isEmail(),
@@ -33,10 +33,10 @@ router.post('/', [
     validateFields
 ], userPost);
 
-router.delete('/:id', [
+userRouter.delete('/:id', [
     check('id', 'No es un id válido').isMongoId(),
     check('id').custom( isUserIdValid ),
     validateFields
 ], userDelete);
 
-export default router;
+export default userRouter;

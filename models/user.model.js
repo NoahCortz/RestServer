@@ -19,8 +19,7 @@ const UserSchema = Schema({
     },
     role: {
         type: String,
-        required: true,
-        emun: ['ADMIN_ROLE', 'USER_ROLE']
+        required: true
     },
     status: {
         type: Boolean,
@@ -32,9 +31,7 @@ const UserSchema = Schema({
     }
 });
 
-// Método que sobreescribira el toJSON del modelo
-// Modificamos los datos que nos devuleve el método para mostrar solo los datos
-// necesarios para el usuario.
+// Sobre-escribiendo el método toJSON
 UserSchema.methods.toJSON = function () {
     const { __v, password, _id, ...user } = this.toObject();
     return user;
