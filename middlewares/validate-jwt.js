@@ -34,10 +34,11 @@ const validateJWT = async (req = request, res = response, next) => {
 
         next();
     } catch (error) {
-        console.error(error);
         res.status(401).json({
             message: 'No existe token en la peticion'
         });
+
+        throw new Error(error);
     }
 }
 

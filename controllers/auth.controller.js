@@ -42,11 +42,11 @@ const loginController = async (req = request, res = response) => {
             token
         });
     } catch (error) {
-        console.error(error);
-
-        return res.status(500).json({
-            message: 'Hable con el administrador'
+        res.status(500).json({
+            message: 'No se pudo iniciar sesion.'
         });
+
+        throw new Error(error);
     }
 }
 
