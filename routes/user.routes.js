@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
+
 import {
     userDelete,
     userGet,
@@ -7,36 +8,69 @@ import {
     userPost,
     userPut
 } from '../controllers/user.controller.js';
-import { validateFields } from '../middlewares/validate-fields.js';
-import { isRoleValid, isUserEmailValid, isUserIdValid } from '../helpers/database-validators.js';
+
+import {
+    validateFields,
+    validateJWT,
+    haveAdminPermission,
+    isAdminRole
+} from '../middlewares/index.js';
+
+import {
+    isRoleValid,
+    isUserEmailValid,
+    isUserIdValid
+} from '../helpers/database-validators.js';
 
 
-const router = Router();
+const userRouter = Router();
 
-router.get('/', userGet);
+userRouter.get('/', [
+    validateJWT,
+    haveAdminPermission(
+        'ADMIN_ROLE',
+        'SUPPORT_ROLE',
+        'SERVICE_ROLE',
+        'USER_ROLE'
+    ),
+    validateFields
+], userGet);
 
-router.put('/:id', [
+userRouter.put('/:id', [
+    validateJWT,
+    haveAdminPermission('ADMIN_ROLE', 'SUPPORT_ROLE'),
     check('id', 'No es un id válido').isMongoId(),
     check('id').custom( isUserIdValid ),
     check('role').custom( isRoleValid ),
     validateFields
 ], userPut);
 
-router.patch('/', userPatch);
+userRouter.patch('/', [
+    validateJWT,
+    isAdminRole,
+    validateFields
+], userPatch);
 
-router.post('/', [
+userRouter.post('/', [
+    validateJWT,
+    haveAdminPermission('ADMIN_ROLE', 'SUPPORT_ROLE', 'SERVICE_ROLE'),
     check('name', 'El nombre es obligatorio').not().isEmpty(),
-    check('password', 'La contraseña es obligatoria y debe tener al menos 6 caracteres').isLength({ min: 6 }),
+    check(
+        'password',
+        'La contraseña es obligatoria y debe tener al menos 6 caracteres'
+    ).isLength({ min: 6 }),
     check('email', 'El correo no es válido').isEmail(),
     check('email').custom( isUserEmailValid ),
     check('role').custom( isRoleValid ),
     validateFields
 ], userPost);
 
-router.delete('/:id', [
+userRouter.delete('/:id', [
+    validateJWT,
+    isAdminRole,
     check('id', 'No es un id válido').isMongoId(),
     check('id').custom( isUserIdValid ),
     validateFields
 ], userDelete);
 
-export default router;
+export default userRouter;

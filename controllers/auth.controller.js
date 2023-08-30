@@ -1,0 +1,55 @@
+import bcryptjs from 'bcryptjs';
+import { request, response } from 'express';
+
+import User from '../models/user.model.js';
+import { generateJWT } from '../helpers/generate-jwt.js';
+
+const loginController = async (req = request, res = response) => {
+    const { email, password } = req.body;
+
+    try {
+        // Verificar que el `email` existe en BD
+        const userExist = await User.findOne({ email });
+
+        if (!userExist) {
+            return res.status(400).json({
+                message: 'Usuario/Password no son correctos*'
+            });
+        }
+
+        // Verificar que el usuario está activo
+        if (!userExist.status) {
+            return res.status(400).json({
+                message: 'Usuario/Password no son correctos.'
+            });
+        }
+
+        // Verificar la contraseña
+        const isValidPassword = bcryptjs.compareSync(password, userExist.password);
+
+        if (!isValidPassword) {
+            return res.status(400).json({
+                message: 'Usuario/Password no son correctos'
+            });
+        }
+
+        // Generar JSON Web Token
+        const token = await generateJWT(userExist.id);
+
+        res.json({
+            message: 'Inicio de sesión correcto.',
+            userExist,
+            token
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: 'No se pudo iniciar sesion.'
+        });
+
+        throw new Error(error);
+    }
+}
+
+export {
+    loginController,
+}
