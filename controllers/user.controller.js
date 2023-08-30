@@ -73,7 +73,7 @@ const userPost = async (req = request, res = response) => {
 const userDelete = async (req = request, res = response) => {
     const { id } = req.params;
 
-    const deletedUser = await User.findByIdAndUpdate(id, { status: false });
+    const deletedUser = await User.findByIdAndUpdate(id, { status: false }, { new: true });
 
     res.status(200).json({
         message: 'Usuario eliminado correctamente.',

@@ -8,6 +8,9 @@ import {
     userPut
 } from '../controllers/user.controller.js';
 import { validateFields } from '../middlewares/validate-fields.js';
+import { validateJWT } from '../middlewares/validate-jwt.js';
+import { isAdminRole } from '../middlewares/validate-roles.js';
+
 import { isRoleValid, isUserEmailValid, isUserIdValid } from '../helpers/database-validators.js';
 
 
@@ -34,6 +37,8 @@ userRouter.post('/', [
 ], userPost);
 
 userRouter.delete('/:id', [
+    validateJWT,
+    isAdminRole,
     check('id', 'No es un id válido').isMongoId(),
     check('id').custom( isUserIdValid ),
     validateFields
