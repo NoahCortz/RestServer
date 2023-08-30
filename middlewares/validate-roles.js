@@ -18,4 +18,25 @@ const isAdminRole = (req = request, res = response, next) => {
     next();
 }
 
-export { isAdminRole }
+const haveAdminPermission = (...roles) => {
+    return (req = request, res = response, next) => {
+        if (!req.userLoggedIn) {
+            return res.status(500).json({
+                message: 'Se quiere verificar el rol sin validar el token'
+            });
+        }
+
+        if (!roles.includes(req.userLoggedIn.role)) {
+            return res.status(401).json({
+                message: `El servicio requiere uno de estos errores: ${roles}`
+            });
+        }
+
+        next();
+    }
+}
+
+export {
+    isAdminRole,
+    haveAdminPermission
+}

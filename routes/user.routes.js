@@ -9,7 +9,7 @@ import {
 } from '../controllers/user.controller.js';
 import { validateFields } from '../middlewares/validate-fields.js';
 import { validateJWT } from '../middlewares/validate-jwt.js';
-import { isAdminRole } from '../middlewares/validate-roles.js';
+import { haveAdminPermission, isAdminRole } from '../middlewares/validate-roles.js';
 
 import { isRoleValid, isUserEmailValid, isUserIdValid } from '../helpers/database-validators.js';
 
@@ -39,6 +39,7 @@ userRouter.post('/', [
 userRouter.delete('/:id', [
     validateJWT,
     isAdminRole,
+    haveAdminPermission(['SUPPORT_ROLE', 'SERVICE_ROLE']),
     check('id', 'No es un id válido').isMongoId(),
     check('id').custom( isUserIdValid ),
     validateFields
