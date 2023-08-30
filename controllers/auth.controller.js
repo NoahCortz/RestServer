@@ -2,6 +2,7 @@ import bcryptjs from 'bcryptjs';
 import { request, response } from 'express';
 
 import User from '../models/user.model.js';
+import { generateJWT } from '../helpers/generate-jwt.js';
 
 const loginController = async (req = request, res = response) => {
     const { email, password } = req.body;
@@ -33,14 +34,12 @@ const loginController = async (req = request, res = response) => {
         }
 
         // Generar JSON Web Token
-
+        const token = await generateJWT(userExist.id);
 
         res.json({
             message: 'Inicio de sesión correcto.',
-            data: {
-                email,
-                password
-            }
+            userExist,
+            token
         });
     } catch (error) {
         console.error(error);
