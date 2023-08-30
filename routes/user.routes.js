@@ -7,9 +7,13 @@ import {
     userPost,
     userPut
 } from '../controllers/user.controller.js';
-import { validateFields } from '../middlewares/validate-fields.js';
-import { validateJWT } from '../middlewares/validate-jwt.js';
-import { haveAdminPermission, isAdminRole } from '../middlewares/validate-roles.js';
+
+import {
+    validateFields,
+    validateJWT,
+    haveAdminPermission,
+    isAdminRole
+} from '../middlewares/index.js';
 
 import { isRoleValid, isUserEmailValid, isUserIdValid } from '../helpers/database-validators.js';
 
