@@ -3,9 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado | Rest Server</title>
+    <title>Google Sign In</title>
 </head>
 <body>
-    <h1>Acceso Denegado!</h1>
+    <h1>Accediendo con Google Sign In</h1>
+    <p>
+        Para la construcción del servicio es necesario crear su propia aplicación en la plataforma de google cloud. Se recomienda seguir los pasos que indica la
+        <a href="https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid?hl=es-419">guía de autenticación de Google</a>.
+    </p>
+
+    <hr />
+
+    <div id="g_id_onload"
+         data-client_id="YOUR_API_CLIEN_KEY"
+         data-auto_prompt="false"
+         data-callback="handleCredentialResponse">
+      </div>
+      <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+      </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function handleCredentialResponse(response) {
+            // Google Token: ID_TOKEN
+            console.log('id_token', response.credential);
+        }
+      </script>
 </body>
 </html>
