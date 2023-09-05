@@ -50,6 +50,16 @@ const loginController = async (req = request, res = response) => {
     }
 }
 
+const googleSignInController = (req = request, res = response) => {
+    const { id_token } = req.body;
+
+    res.json({
+        message: 'Inicio de sesion correcto',
+        id_token
+    })
+}
+
 export {
     loginController,
+    googleSignInController
 }
